@@ -1,1 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Surat Fina Full System BY FAHRI</title>
 
+<style>
+body{
+margin:0;
+overflow:hidden;
+font-family:Arial;
+background:linear-gradient(120deg,#ff4fd8,#ffb3ec,#6a00ff,#000);
+animation:bgMove 6s infinite alternate;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+@keyframes bgMove{
+0%{filter:hue-rotate(0deg) brightness(1)}
+100%{filter:hue-rotate(60deg) brightness(1.3)}
+}
+
+/* NOTIF */
+#notif{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+background:white;
+color:#ff2fc0;
+padding:10px 18px;
+border-radius:12px;
+display:none;
+font-weight:bold;
+box-shadow:0 0 20px pink;
+}
+
+/* LOGIN CARD */
+.card{
+width:360px;
+padding:25px;
+border-radius:22px;
+background:rgba(255,255,255,0.14);
+backdrop-filter:blur(25px);
+text-align:center;
+color:white;
+box-shadow:0 0 60px rgba(255,255,255,0.5);
+animation:floatMenu 4s ease-in-out infinite;
+}
+
+@keyframes floatMenu{
+0%{transform:translateY(0px)}
+50%{transform:translateY(-10px)}
+100%{transform:translateY(0px)}
+}
+
+input{
+width:90%;
+padding:12px;
+border:none;
+border-radius:12px;
+text-align:center;
+margin-top:10px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:#ff4fd8;
+color:white;
+font-weight:bold;
+cursor:pointer;
+margin-top:10px;
+transition:0.2s;
+box-shadow:0 0 10px #ff4fd8;
+}
+
+button:hover{
+transform:scale(1.07);
+box-shadow:0 0 25px #ff2fc0;
+}
+
+/* REGISTER */
+#regBox{
+display:none;
+animation:slideIn .4s ease;
+}
+
+@keyframes slideIn{
+from{opacity:0;transform:translateY(15px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+/* APP */
+#app{
+display:none;
+color:white;
+text-align:center;
+padding-top:20px;
+}
+
+.box{
+width:92%;
+max-width:430px;
+margin:auto;
+padding:20px;
+border-radius:22px;
+background:rgba(255,255,255,0.14);
+backdrop-filter:blur(20px);
+box-shadow:0 0 40px rgba(255,255,255,0.3);
+animation:boxPulse 3s infinite ease-in-out;
+}
+
+@keyframes boxPulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.02)}
+100%{transform:scale(1)}
+}
+
+#pageInfo{
+font-size:12px;
+opacity:0.8;
+margin-top:5px;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="notif"></div>
+
+<!-- LOGIN -->
+<div class="card" id="loginBox">
+
+<h2 style="
+background:linear-gradient(90deg,#ff4fd8,#6a5cff,#00c2ff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+letter-spacing:2px;">
+💖 SURAT FINA SYSTEM
+</h2>
+
+<div style="font-size:12px;opacity:0.8;">
+BY FAHRI ✨
+</div>
+
+<input id="user" placeholder="username..." />
+
+<button onclick="login()">Masuk ✨</button>
+
+<button onclick="showRegister()" style="background:#ff8ad4;">
+register 💌
+</button>
+
+<div id="regBox">
+<input id="newUser" placeholder="buat username..." />
+<button onclick="register()">Buat Akun 💖</button>
+</div>
+
+<hr style="opacity:0.3">
+
+<!-- MENU SHARE (TETAP ADA) -->
+<button onclick="shareApp()" style="background:#6a5cff;">
+📤 Share
+</button>
+
+<button onclick="copyInfo()" style="background:#00c2ff;">
+📋 Copy Info
+</button>
+
+</div>
+
+<!-- APP -->
+<div id="app">
+<div class="box">
+<h2 id="title"></h2>
+<div id="text"></div>
+<div id="pageInfo"></div>
+<button onclick="next()">NEXT 💌</button>
+</div>
+</div>
+
+<canvas id="fx1"></canvas>
+<canvas id="fx2"></canvas>
+<canvas id="fx3"></canvas>
+
+<script>
+
+// ================= NOTIF =================
+function notif(msg){
+let n=document.getElementById("notif");
+n.innerText=msg;
+n.style.display="block";
+setTimeout(()=>n.style.display="none",1800);
+}
+
+// ================= REGISTER =================
+function showRegister(){
+document.getElementById("regBox").style.display="block";
+notif("register aktif 💌");
+}
+
+function register(){
+let u=document.getElementById("newUser").value.trim();
+if(!u){notif("isi dulu 😅");return;}
+
+localStorage.setItem("user",u);
+
+document.getElementById("loginBox").style.display="none";
+document.getElementById("app").style.display="block";
+
+document.getElementById("title").innerText="Halo " + u + " 💖";
+
+show();updatePage();
+}
+
+// ================= LOGIN =================
+function login(){
+let u=document.getElementById("user").value.trim();
+if(!u){notif("isi username 😅");return;}
+
+localStorage.setItem("user",u);
+
+document.getElementById("loginBox").style.display="none";
+document.getElementById("app").style.display="block";
+
+document.getElementById("title").innerText="Halo " + u + " 💖";
+
+show();updatePage();
+}
+
+// ================= SURAT =================
+let i=0;
+
+const surat=[
+"💌 gw salting tiap liat lu 😳",
+"🤍 lu ganggu tapi nyaman",
+"✨ gw sok cool tapi boong",
+"😤 hati gw ribut sendiri",
+"🐰 lu terlalu gemes",
+"💖 vibe lu beda banget",
+"😳 gw freeze tiap lu muncul",
+"💞 gw kalah sama lu",
+"🔥 chaos tapi gw suka",
+"💌 END"
+];
+
+// ================= SHOW =================
+function show(){
+let t=document.getElementById("text");
+
+t.style.opacity=0;
+t.style.transform="translateY(15px)";
+t.style.filter="blur(6px)";
+
+setTimeout(()=>{
+t.innerText=surat[i];
+t.style.opacity=1;
+t.style.transform="translateY(0)";
+t.style.filter="blur(0px)";
+t.style.transition="0.4s ease";
+},120);
+}
+
+// ================= PAGE =================
+function updatePage(){
+document.getElementById("pageInfo").innerText=
+"Page " + (i+1) + " / " + surat.length;
+}
+
+// ================= NEXT =================
+function next(){
+if(i===surat.length-1){
+surprise();
+return;
+}
+i++;
+show();
+updatePage();
+}
+
+// ================= SURPRISE =================
+function surprise(){
+document.getElementById("text").innerHTML=`
+💖 WAHHH SAMPAI SINI YA 😳💞<br><br>
+😤 gw kira lu cuma buka doang<br>
+ternyata lu baca sampe akhir 😭<br><br>
+🐸 “kok bisa sih orang ini bikin gw senyum sendiri”<br><br>
+💌 yaudah deh… gw kalah total 😂💖
+`;
+
+document.getElementById("pageInfo").innerText="END • SALTING MODE 😂💖";
+
+notif("😂 SURPRISE SALTING!");
+}
+
+// ================= SHARE (AUTO COPY LINK + SAFARI SAFE) =================
+function shareApp(){
+
+let link = window.location.href;
+
+try {
+navigator.clipboard.writeText(link);
+notif("📋 link sudah dicopy 💖");
+} catch(e) {
+prompt("copy link ini:", link);
+}
+
+if(navigator.share){
+navigator.share({
+title:"Surat Fina BY FAHRI",
+text:"💖 ini link suratnya",
+url:link
+}).catch(()=>{});
+}
+
+notif("📤 share siap 💖");
+}
+
+// ================= COPY INFO =================
+function copyInfo(){
+navigator.clipboard.writeText("Surat Fina Full System BY FAHRI 💖");
+notif("copied 💖");
+}
+
+// ================= FX =================
+function fx(id,sym,speed){
+const c=document.getElementById(id);
+const ctx=c.getContext("2d");
+
+c.width=innerWidth;
+c.height=innerHeight;
+
+let arr=[];
+
+setInterval(()=>{
+arr.push({
+x:Math.random()*c.width,
+y:c.height,
+dx:(Math.random()-0.5)*3,
+dy:-Math.random()*speed,
+life:140
+});
+},60);
+
+function draw(){
+ctx.clearRect(0,0,c.width,c.height);
+
+for(let p of arr){
+p.x+=p.dx;
+p.y+=p.dy;
+p.life--;
+
+ctx.font="18px Arial";
+ctx.fillText(sym,p.x,p.y);
+}
+
+arr=arr.filter(p=>p.life>0);
+requestAnimationFrame(draw);
+}
+
+draw();
+}
+
+fx("fx1","🤍",3);
+fx("fx2","✨",2);
+fx("fx3","🎆",4);
+
+</script>
+
+</body>
+</html>
